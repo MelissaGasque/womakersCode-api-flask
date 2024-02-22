@@ -1,0 +1,17 @@
+{% extends "layout.html" %}  
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-3 col-6">
+        <h1 class="h5">{{ location.name }}</h1>
+        <h1 class="h5">{{ location.type }}</h1>
+        <h1 class="h5">{{ location.dimension }}</h1>        
+        <a class="h5" href="location.residents">{{ location.residents }}</a>
+        
+        <!-- {% for resident in location.residents %}
+            <a class="h5" href="{{ url_for('perfilPersonagem_page', link=resident) }}">{{ resident }}</a>
+        {% endfor %} -->
+        <!--Os links precisam levar para a pagina do personagem-->
+    </div>
+</div>
+{% endblock %}

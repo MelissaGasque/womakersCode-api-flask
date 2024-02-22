@@ -1,0 +1,16 @@
+{% extends "layout.html" %}  <!--Conecta o bloco abaixo com a página layout-->
+
+{% block content%}
+<div class="row">
+    {% for location in locations %}
+    <div class="col-sm-12">
+        <h1 class="h5">{{location.name}}</h1> <h1 class="h5">{{location.type}}</h1> <h1 class="h5">{{location.dimension}}</h1>
+        <p>
+            <a href="{{url_for('get_location_page', id=location.id)}}" class="btn
+                btn-primary">Ver Perfil de Localização</a>
+        </p>
+        <h1>------------------------------------</h1>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
