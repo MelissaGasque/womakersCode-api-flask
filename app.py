@@ -4,7 +4,7 @@ import json
 # # urllib ajuda a manipular as requisições e o json ajuda a tratar o resultado
 
 app = Flask(__name__)
-
+base_url = "http://127.0.0.1:5000/"
 
 @app.route("/")
 def get_list_characters_page():
@@ -20,36 +20,54 @@ def get_list_characters_page():
 
 @app.route("/profile/<id>")
 def get_profile_page(id):
-    url = "https://rickandmortyapi.com/api/character/" + id
+    url = (f"https://rickandmortyapi.com/api/character/" + id)
     response = urllib.request.urlopen(url)
     data = response.read()
     dict = json.loads(data)
 
-    return render_template("profile.html", profile=dict)
+    origin_link = dict["origin"]["url"]
+    origin_id = origin_link.split('/')[-1]
+
+    location_link = dict["location"]["url"]
+    location_id = location_link.split('/')[-1]
+
+    dict["origin"]["url"] = (f"{base_url}location/{origin_id}")
+    dict["location"]["url"] = (f"{base_url}location/{location_id}")
+
+    episodes = []
+
+    for unique_episode in dict["episode"]:
+        url2 = unique_episode
+        response2 = urllib.request.urlopen(url2)
+        data2 = response2.read()
+        dict2 = json.loads(data2)
+
+        episode = {
+            "name": dict2["name"],
+            "link": (f"{base_url}episode/{dict2["id"]}")
+        }
+
+        episodes.append(episode)
 
 
-# @app.route("/lista")
-# def get_list_elements():
-#     url = "https://rickandmortyapi.com/api/character/"
-#     response = urllib.request.urlopen(url)
-#     characters = response.read()
-#     dict = json.loads(characters)
 
-#     characters = []
+    result = {
+        "name": dict["name"],
+        "image": dict["image"],
+        "species": dict["species"],
+        "gender": dict["gender"],
+        "origin": dict["origin"],
+        "location": dict["location"],
+        "status": dict["status"],
+        "episodes": episodes
+    }
 
-#     for character in dict["results"]:
-#         character = {
-#             "name": character["name"],
-#             "status": character["status"]
-#         }
+    return render_template("profile.html", profile=result)
 
-#         characters.append(character)
-
-#     return {"characters": characters}
 
 @app.route("/locations")
 def get_list_locations_page():
-    url = "https://rickandmortyapi.com/api/location/"
+    url = (f"https://rickandmortyapi.com/api/location/")
     response = urllib.request.urlopen(url)
     data = response.read()
     dict = json.loads(data)
@@ -59,12 +77,34 @@ def get_list_locations_page():
 
 @app.route("/location/<id>")
 def get_location_page(id):
-    url = "https://rickandmortyapi.com/api/location/" + id
+    url = (f"https://rickandmortyapi.com/api/location/" + id)
     response = urllib.request.urlopen(url)
     data = response.read()
     dict = json.loads(data)
 
-    return render_template("location.html", location=dict)
+    residents = []
+
+    for resident in dict["residents"]:
+        url2 = resident
+        response2 = urllib.request.urlopen(url2)
+        data2 = response2.read()
+        dict2 = json.loads(data2)
+
+        character = {
+             "name": dict2["name"],
+             "link": (f"{base_url}profile/{dict2["id"]}")
+        }
+
+        residents.append(character)
+
+    result = {
+        "name": dict["name"],
+        "type": dict["type"],
+        "dimension": dict["dimension"],
+        "residents": residents
+    }
+
+    return render_template("location.html", location=result)
 
 
 @app.route("/episodes")
@@ -79,19 +119,34 @@ def get_list_episodes_page():
 
 @app.route("/episode/<id>")
 def get_episode_page(id):
-    url = "https://rickandmortyapi.com/api/episode/" + id
+    url = (f"https://rickandmortyapi.com/api/episode/" + id)
     response = urllib.request.urlopen(url)
     data = response.read()
     dict = json.loads(data)
 
-    return render_template("episode.html", episode=dict)
+    characters = []
+
+    for unique_character in dict["characters"]:
+        url2 = unique_character
+        response2 = urllib.request.urlopen(url2)
+        data2 = response2.read()
+        dict2 = json.loads(data2)
+
+        character = {
+             "name": dict2["name"],
+             "link": (f"{base_url}profile/{dict2["id"]}")
+        }
+
+        characters.append(character)
+
+    result = {
+        "name": dict["name"],
+        "air_date": dict["air_date"],
+        "episode": dict["episode"],
+        "characters": characters
+    }
+
+    return render_template("episode.html", episode=result)
 
 
-# @app.route("<link>")
-# def perfilPersonagem_page(link):
-#     url = link
-#     response = urllib.request.urlopen(url)
-#     data = response.read()
-#     dict = json.loads(data)
 
-#     return render_template("perfilPersonagem.html", teste=dict)

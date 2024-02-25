@@ -1,15 +1,30 @@
-{% extends "layout.html" %}  <!--Conecta o bloco abaixo com a página layout-->
+{% extends 'layout.html' %}
 
-{% block content%}
+{% block content %}
+<P> </P>
 <div class="row">
-    <div class="col-sm-3 col-6">
-        <img src="{{profile.image}}" alt="{{profile.name}}"
-        class="img-fluid img-thumbnail" />
-    </div>
 
     <div class="col-sm-3 col-6">
-        <h1 class="h5">{{profile.name}}</h1>
+        <img alt="" src="{{profile.image}}" class="img-fluid img-thumbnail" /> 
     </div>
+
+    <div class="col-sm-6 col-6">
+        <h1 class="h4">Nome do personagem: {{profile.name}}</h1>
+        <h3 class="h5">Espécie do personagem: {{profile.species}}</h3>
+        <h3 class="h5">Gênero do personagem: {{profile.gender}}</h3>
+        <p class="h5">Origem do personagem: </p><a class="h5" href="{{profile.origin.url}}">{{profile.origin.name}}</a>
+        <p class="h5">Localização do personagem: </p><a class="h5" href="{{profile.location.url}}">{{profile.location.name}}</a>
+        <h3 class="h5">Status do personagem: {{profile.status}}</h3>
+        <h1 class="h5">Episódios: </h1><br>       
+
+        {% for episode in profile.episodes %}
+            <ul>
+                <li><a class="h5" href="{{episode.link}}">{{ episode.name }}</a></li>                
+            </ul>
+            
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}
 
